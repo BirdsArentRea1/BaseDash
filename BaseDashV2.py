@@ -1,4 +1,6 @@
 import pygame
+import random
+from platforms import Platform
 
 pygame.init()
 pygame.display.set_caption("Base Dash")
@@ -17,6 +19,8 @@ jmp2 = -15
 jumping = False
 double_jump = False
 jump_pressed = False
+
+platforms = []
 
 while True: #GAME LOOP ##########################################################################
     clock.tick(60)
@@ -40,11 +44,9 @@ while True: #GAME LOOP #########################################################
         
         if not jump_pressed:
             if not jumping:
-                print("single jump!")
                 vy = jmp
                 jumping = True
             elif not double_jump:
-                print("double jump!")
                 vy = jmp2
                 double_jump = True
             jump_pressed = True
@@ -60,11 +62,23 @@ while True: #GAME LOOP #########################################################
         double_jump = False
         vy = 0
 
+#platforms
+    if random.randint(1, 100) <= 4:
+        platforms.append(Platform())
+        # print("appending platform!")
+
+    for platform in platforms:
+        if platform.x + platform.width < 100:
+            platforms.remove(platform)
 
 #Render-------------------------------------------------------------------------------------------
     screen.fill(WHITE)
 
     pygame.draw.rect(screen, BLUE, (px, py, pw, ph))
+
+    for platform in platforms:
+        platform.update()
+        platform.draw(screen)
 
     pygame.display.flip()
 
