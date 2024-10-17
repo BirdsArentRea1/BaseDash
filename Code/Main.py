@@ -1,6 +1,7 @@
 import pygame
 import random
 from platforms import Platform
+from balls import Ball
 
 pygame.init()
 pygame.display.set_caption("Base Dash")
@@ -23,6 +24,8 @@ hit_pressed = False
 hitCounter = 0
 
 platforms = []
+
+balls = []
 
 def check_collision(player_x, player_y, player_w, player_h, playforms):
     for platform in platforms:
@@ -66,7 +69,7 @@ while True: #GAME LOOP #########################################################
         jump_pressed = False
 
 #Bat
-    if keys[pygame.K_Z]:
+    if keys[pygame.K_z]:
         hit_pressed = True
         hitCounter = 0
 
@@ -101,6 +104,15 @@ while True: #GAME LOOP #########################################################
         if platform.x + platform.width < 100:
             platforms.remove(platform)
 
+#Balls
+    if random.randint(1, 100) <= 4:
+        balls.append(Ball())
+        # print("appending balls!")
+
+    for Ball in balls:
+        if Ball.x + Ball.width < 100:
+            balls.remove(Ball)
+
 #Render-------------------------------------------------------------------------------------------
     screen.fill(WHITE)
 
@@ -109,6 +121,10 @@ while True: #GAME LOOP #########################################################
     for platform in platforms:
         platform.update()
         platform.draw(screen)
+
+    for Ball in balls:
+        Ball.update()
+        Ball.draw(screen)
 
     pygame.display.flip()
 
