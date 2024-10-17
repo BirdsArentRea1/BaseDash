@@ -19,8 +19,20 @@ jmp2 = -15
 jumping = False
 double_jump = False
 jump_pressed = False
+hit_pressed = False
+hitCounter = 0
 
 platforms = []
+
+def check_collision(player_x, player_y, player_w, player_h, playforms):
+    for platform in platforms:
+        if (player_y + player_h <= platform.y and
+            player_y + player_h + vy >= platform.y and
+            player_x >= platform.x + platform.width and
+                player_x <= platform.x + platform.width):
+            return platform
+        return None
+
 
 while True: #GAME LOOP ##########################################################################
     clock.tick(60)
@@ -53,8 +65,26 @@ while True: #GAME LOOP #########################################################
     else:
         jump_pressed = False
 
-    vy += g
-    py += vy
+#Bat
+    if keys[pygame.K_Z]:
+        hit_pressed = True
+        hitCounter = 0
+
+    hitCounter += 1
+    if hitCounter > 20:
+        hit_pressed = False
+
+#Platform collision
+    platform_collided = check_collision(px, py, pw, ph, platforms)
+    if platform_collided:
+        py = platform_collided.y - ph
+        vy = 0
+        jumping = False
+        double_jump = False
+    else:
+#apply gravity
+        vy += g
+        py += vy
 
     if py >= 600 - ph:
         py = 600 - ph
