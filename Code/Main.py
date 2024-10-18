@@ -24,7 +24,6 @@ hit_pressed = False
 hitCounter = 0
 
 platforms = []
-
 balls = []
 
 def check_collision(player_x, player_y, player_w, player_h, playforms):
