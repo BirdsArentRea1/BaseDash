@@ -9,6 +9,7 @@ screen = pygame.display.set_mode((800,600))
 clock = pygame.time.Clock()
 
 WHITE = (255, 255,255)
+BLACK = (0, 0, 0,)
 BLUE = (0, 0, 255)
 
 pw, ph = 10, 20
@@ -108,12 +109,12 @@ while True: #GAME LOOP #########################################################
         balls.append(Ball())
         # print("appending balls!")
 
-    for Ball in balls:
-        if Ball.x < 100:
-            balls.remove(Ball)
+    for ball in balls:
+        if ball.x < 100:
+            balls.remove(ball)
 
 #Render-------------------------------------------------------------------------------------------
-    screen.fill(WHITE)
+    screen.fill(BLACK)
 
     pygame.draw.rect(screen, BLUE, (px, py, pw, ph))
 
@@ -121,9 +122,9 @@ while True: #GAME LOOP #########################################################
         platform.update()
         platform.draw(screen)
 
-    for Ball in balls:
-        Ball.update()
-        Ball.draw(screen)
+    for ball in balls:
+        ball.update()
+        ball.draw(screen)
 
     pygame.display.flip()
 
