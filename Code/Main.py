@@ -110,7 +110,7 @@ while True: #GAME LOOP #########################################################
         # print("appending balls!")
 
     for Ball in balls:
-        if Ball.x + Ball.width < 100:
+        if Ball.x < 100:
             balls.remove(Ball)
 
 #Render-------------------------------------------------------------------------------------------
