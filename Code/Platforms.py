@@ -1,9 +1,6 @@
 import pygame
 import random
 
-GREEN = (0, 100, 0)
-BLUE = (0, 50, 150)
-
 class Platform:
     def __init__(self):
         self.width = random.randint(140,160)
@@ -11,14 +8,15 @@ class Platform:
         self.x = 800
         self.y = random.randint(400,550)
         self.speed = random.uniform(3.5,5.5)
-        self.type = random.randint(0,2)
+        self.color = (random.randint(0, 255), random.randint(0 ,255), random.randint(0, 255))
+        self.has_base = random.randint(1,100) <= 30
         
-
     def update(self):
         self.x -= self.speed
 
     def draw(self, screen):
-        if self.type == 1:
-            pygame.draw.rect(screen, GREEN, (self.x, self.y, self.width, self.height))
-        else:
-            pygame.draw.rect(screen, BLUE, (self.x, self.y, self.width, self.height))
+            
+            pygame.draw.rect(screen, self.color, (self.x, self.y, self.width, self.height))
+
+            if self.has_base:
+                 pygame.draw.rect(screen, self.color, (self.x + 50, self.y - 40, 20, 40))
