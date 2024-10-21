@@ -1,4 +1,5 @@
 import pygame
+import math
 import random
 from platforms import Platform
 from balls import Ball
@@ -22,17 +23,26 @@ jumping = False
 double_jump = False
 jump_pressed = False
 hit_pressed = False
+dash_pressed = False
 hitCounter = 0
+dash_speed = 10
+dashCounter = 0
 
 platforms = []
 balls = []
 
-def check_collision(player_x, player_y, player_w, player_h, playforms):
+def check_collision(player_x, player_y, player_w, player_h, platforms):
     for platform in platforms:
         if (player_y + player_h <= platform.y and
             player_y + player_h + vy >= platform.y and
-            player_x >= platform.x + platform.width and
-                player_x <= platform.x + platform.width):
+            player_x + player_w >= platform.x and
+            player_x <= platform.x + platform.width):
+
+            if platform.check_base_collision(player_x, player_y):
+                if dash_pressed:
+                    platform.has_base = False
+                else:
+                    return 'stuck'
             return platform
         return None
 
@@ -50,12 +60,14 @@ while True: #GAME LOOP #########################################################
 #Physics -----------------------------------------------------------------------------------------
 
 #Player movement
-    if keys[pygame.K_LEFT]:
+    if keys[pygame.K_a] and not dash_pressed:
         px -= vx
-    if keys[pygame.K_RIGHT]:
+    if keys[pygame.K_d] and not dash_pressed:
+        px += vx
+    elif dash_pressed:
         px += vx
         
-    if keys[pygame.K_UP]: #or keys[pygame.K_SPACE]:
+    if keys[pygame.K_w] or keys[pygame.K_SPACE]: 
         
         if not jump_pressed:
             if not jumping:
@@ -95,6 +107,18 @@ while True: #GAME LOOP #########################################################
         double_jump = False
         vy = 0
 
+#Dash
+    #def dash_pressed(px, py):
+    if keys[pygame.K_LSHIFT]:
+        dash_pressed = True
+        dashCounter = 0
+        vx = dash_speed
+
+    dashCounter += 1
+    if dashCounter > 20:
+        dash_pressed = False
+        vx = 3
+
 #platforms
     if random.randint(1, 100) <= 4:
         platforms.append(Platform())
@@ -110,8 +134,19 @@ while True: #GAME LOOP #########################################################
         # print("appending balls!")
 
     for ball in balls:
-        if ball.x < 100:
-            balls.remove(ball)
+        if check_ball_collision(px, py, ball):
+            if hit_pressed:
+                ball.speed = -ball.speed
+                print("Ball reflected!")
+
+#Ball collision
+    def check_ball_collision(player_x, player_y, ball):
+
+        distance = math.sqrt((ball.x - player_x) ** 2 + (ball.y - player_y) ** 2)
+
+        if distance < 3:
+            return True
+        return False
 
 #Render-------------------------------------------------------------------------------------------
     screen.fill(BLACK)
